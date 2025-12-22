@@ -10,6 +10,7 @@ import HotelRouter from './routes/HotelRoutes.js'
 import connectCloudinary from './confiq/Cloudinary.js'
 import RoomRouter from './routes/RoomRoutes.js'
 import bookingRoute from './routes/Booking.js'
+import AuthMiddleware from 'server/middleware/AuthMiddleware.js';
 
 
 
@@ -25,9 +26,11 @@ app.use(cors())
 
 app.use(express.json())
 app.use(clerkMiddleware())
+app.use(AuthMiddleware())
+
 
 // api to listen to clerkWebhooks
-app.use('api/clerk',clerkWebhooks)
+app.use('/api/clerk',clerkWebhooks)
 
 app.get('/',(req,res)=>res.send("API is working"))
 app.use('/api/user/',userRouter)
