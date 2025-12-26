@@ -10,24 +10,18 @@ import HotelRouter from './routes/HotelRoutes.js'
 import connectCloudinary from './confiq/Cloudinary.js'
 import RoomRouter from './routes/RoomRoutes.js'
 import bookingRoute from './routes/Booking.js'
-import AuthMiddleware from 'server/middleware/AuthMiddleware.js';
-
-
-
-
 
 connectDB()
 connectCloudinary()
 const app=express()
-app.use(cors())
+
 
 
 // middleware
 
 app.use(express.json())
 app.use(clerkMiddleware())
-app.use(AuthMiddleware())
-
+app.use(cors())
 
 // api to listen to clerkWebhooks
 app.use('/api/clerk',clerkWebhooks)
@@ -40,10 +34,9 @@ app.use('/api/bookings/',bookingRoute)
 
 
 
-
 const PORT=process.env.PORT || 5000     
 
-// app.listen(PORT,()=>console.log(`server is running ${PORT}`));
+app.listen(PORT,()=>console.log(`server is running ${PORT}`));
 
 
 

@@ -16,7 +16,7 @@ const checkAvailability = async ({ checkInDate, checkOutDate, room }) => {
         const isAvailable = booking.length === 0
         return isAvailable
     } catch (error) {
-        console.error(error.message)
+        console.error(error.message) 
     }
 }
 
