@@ -5,7 +5,7 @@ import { Webhook } from "svix";
 const clerkWebhooks = async (req, res) => {
     try {
         // create a sviX instance with clerk webhook secret
-        const WHook = new Webhook(process.env.CLERK_WEBHOOKS_SECRET)
+        const WHook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
         // getting headers
         const headers = {
             'svix-id': req.headers['svix-id'],
@@ -48,7 +48,7 @@ const clerkWebhooks = async (req, res) => {
         res.json({ success: true, message: "webhook Recieved" })
 
     } catch (error) {
-        console.lo(error)
+        console.log(error)
         res.json({ success: false, message: "error message" })
     }
 }
