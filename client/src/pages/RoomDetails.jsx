@@ -149,6 +149,10 @@ const RoomDetails = () => {
                 </div>
 
             </div>
+
+
+
+
             {/* {checkout form} */}
             <form onSubmit={onSubmitHandler} className="flex flex-col md:flex-row items-start md:items-center justify-between bg-white shadow-[0px_0px_20px_rgba(0,0,0,0.15)] p-6 rounded-xl mx-auto mt-16 max-w-6xl">
                 <div className=' flex flex-col justify-between flex-wrap md:flex-row items-start md:items-center gap-4 md:gap-10 text-gray-500 '>
@@ -175,6 +179,9 @@ const RoomDetails = () => {
                     {isAvailable ? "Book Now" : "Check Availability"}
                 </button>
             </form>
+
+
+
             {/* {common-specification} */}
             <div className='mt-20 space-y-5'>
                 {roomCommonData.map((spec, index) => (
@@ -190,6 +197,9 @@ const RoomDetails = () => {
             <div className='max-w-3xl border-y border-gray-300 my-15 py-10 text-gray-500'>
                 <p>Guests will be allocated on the ground floor according to availability. You get a comfortable Two bedroom apartment has a true city feeling. The price quoted is for two guest, at the guest slot please mark the number of guests to get the exact price for groups. The Guests will be allocated ground floor according to availability. You get the comfortable two bedroom apartment that has a true city feeling.</p>
             </div>
+
+
+            
             {/* {hosted by} */}
             <div className='flex flex-col items-start gap-4'>
                 <div className='flex gap-4'>

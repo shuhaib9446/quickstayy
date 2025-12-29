@@ -17,14 +17,15 @@ export const AppProvider = ({ children }) => {
 
 
     const [showHotelReg, setShowHotelReg] = useState(false)
-    const [isOwner, setIsOwner] = useState(true)
+    const [isOwner, setIsOwner] = useState(false)
     const [searchedCities, setSearchedCities] = useState([])
     const [rooms, setRooms] = useState([])
 
 
     const fetchRooms=async()=>{
         try {
-            const {data}=await axios.get('/api/rooms')
+            const {data}=await axios.get('/api/rooms/')
+            console.log(data)
             if(data.success){
                 setRooms(data.rooms)
             }else{
@@ -39,13 +40,13 @@ export const AppProvider = ({ children }) => {
 
     const fetchUser = async () => {
         try {
-            //  const getToken = await getToken(); // make sure this resolves to a string
+             
             if (!Token) {
                 throw new Error("No token available");
             }
 
 
-            const { data } = await axios.get('/api/user', { headers: { Authorization: `Bearer ${Token}` },
+            const { data } = await axios.get('/api/user/', { headers: { Authorization: `Bearer ${Token}` },
  })
             if (data.success) {
                 setIsOwner(data.role === 'hotelOwner')
