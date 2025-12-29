@@ -16,7 +16,7 @@ const checkAvailability = async ({ checkInDate, checkOutDate, room }) => {
         const isAvailable = booking.length === 0
         return isAvailable
     } catch (error) {
-        console.error(error.message) 
+        console.error(error.message)
     }
 }
 
@@ -43,6 +43,9 @@ export const createBooking = async (req, res) => {
     try {
 
         const { rid, checkInDate, checkOutDate, guests } = req.body
+        if (!req.user) {
+            return res.status(401).json({ success: false, message: "Unauthorized" })
+        }
         const user = req.user.id
         const room = rid
         //before booking check availability
@@ -74,7 +77,7 @@ export const createBooking = async (req, res) => {
             checkOutDate,
             totalPrice,
         })
-        
+
         res.json({ success: true, message: "Booking created successfully" })
 
 

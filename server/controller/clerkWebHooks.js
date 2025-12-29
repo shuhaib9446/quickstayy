@@ -4,6 +4,7 @@ import { Webhook } from "svix";
 
 const clerkWebhooks = async (req, res) => {
     try {
+        console.log("🔥 CLERK WEBHOOK HIT 🔥");
         // create a sviX instance with clerk webhook secret
         const WHook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
         // getting headers
@@ -33,6 +34,7 @@ const clerkWebhooks = async (req, res) => {
         switch (type) {
             case 'user.created':
                 await user.create(userData)
+                console.log("🔥 USER.CREATED EVENT 🔥", data.id);
                 break;
 
             case 'user.updated':
