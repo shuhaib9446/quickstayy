@@ -1,58 +1,50 @@
-
-import user from "../models/User.js";
+import User from "../models/User.js";
 import { Webhook } from "svix";
 
 const clerkWebhooks = async (req, res) => {
-    try {
-        console.log("🔥 CLERK WEBHOOK HIT 🔥");
-        // create a sviX instance with clerk webhook secret
-        const WHook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
-        // getting headers
-        const headers = {
-            'svix-id': req.headers['svix-id'],
-            'svix-timestamp': req.headers['svix-timestamp'],
-            'svix-signature': req.headers['svix-signature'],
-        }
+  try {
+    console.log("🔥 CLERK WEBHOOK HIT 🔥");
 
-        // verifying headers
-        await WHook.verify(JSON.stringify(req.body), headers)
+    const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
 
-        // getting data from req.body
-        const { data, type } = req.body
+    const headers = {
+      "svix-id": req.headers["svix-id"],
+      "svix-timestamp": req.headers["svix-timestamp"],
+      "svix-signature": req.headers["svix-signature"],
+    };
 
-        const userData = {
-            _id: data.id,
-            email: data.email_addresses[0].email_address,
-            username: data.first_name + " " + data.last_name,
-            image: data.image_url
-        }
-        console.log("Webhook type:", type);
-        console.log("Webhook data:", data);
+    // ✅ VERIFY USING RAW BODY
+    const evt = wh.verify(req.body, headers);
 
+    const { type, data } = evt;
+    console.log("Webhook type:", type);
 
-        // switch cases for different events
-        switch (type) {
-            case 'user.created':
-                await user.create(userData)
-                console.log("🔥 USER.CREATED EVENT 🔥", data.id);
-                break;
+    const userData = {
+      _id: data.id, // must be String in schema
+      email: data.email_addresses?.[0]?.email_address,
+      username: `${data.first_name || ""} ${data.last_name || ""}`,
+      image: data.image_url,
+    };
 
-            case 'user.updated':
-                await user.findByIdAndUpdate(data.id, userData)
-                break;
+    if (type === "user.created") {
+      await User.findByIdAndUpdate(
+        data.id,
+        userData,
+        { upsert: true, new: true } // 🔥 prevents duplicate errors
+      );
 
-            case 'user.deleted':
-                await user.findByIdAndDelete(data.id)
-                break;
-            default:
-                break;
-        }
-        res.json({ success: true, message: "webhook Recieved" })
-
-    } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: "error message" })
+      console.log("USER SAVED", data.id);
     }
-}
 
-export default clerkWebhooks
+    if (type === "user.deleted") {
+      await User.findByIdAndDelete(data.id);
+    }
+
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    console.error(" CLERK WEBHOOK ERROR:", error);
+    return res.status(400).json({ success: false, error: error.message });
+  }
+};
+
+export default clerkWebhooks;
